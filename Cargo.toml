@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "scalar",
+    ".",
+]
+
+[package]
+name = "piscine-rust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+scalar = { path = "scalar" }
