@@ -2,7 +2,7 @@
 members = [
     "scalar",
     ".",
-    "temperature_conv",
+    "temperature_conv", "speed_transformation",
 ]
 
 [package]
@@ -13,3 +13,4 @@ edition = "2024"
 [dependencies]
 scalar = { path = "scalar" }
 temperature_conv = { path = "temperature_conv"}
+speed_transformation = { path = "speed_transformation"}
