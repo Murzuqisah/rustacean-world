@@ -14,3 +14,4 @@ edition = "2024"
 scalar = { path = "scalar" }
 temperature_conv = { path = "temperature_conv"}
 speed_transformation = { path = "speed_transformation"}
+looping = { path = "looping"}
