@@ -2,7 +2,7 @@
 members = [
     "scalar",
     ".",
-    "temperature_conv", "speed_transformation",
+    "temperature_conv", "speed_transformation", "looping",
 ]
 
 [package]
