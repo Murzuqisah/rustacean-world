@@ -74,6 +74,6 @@ pub struct Card {
     pub rank: Rank,
 }
 
-pub fn winner_card(card: Card) -> bool {
+pub fn winner_card(card: &Card) -> bool {
     matches!(card.rank, Rank::Ace) && matches!(card.suit, Suit::Spade)
 }
