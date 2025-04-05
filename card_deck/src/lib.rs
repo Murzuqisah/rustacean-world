@@ -75,5 +75,6 @@ pub struct Card {
 }
 
 pub fn winner_card(card: Card) -> bool {
-    matches!(card.rank, Rank::Ace) && matches!(card.suit, Suit::Spade)
+    let cloned_card = card.clone();
+    matches!(cloned_card.rank, Rank::Ace) && matches!(cloned_card.suit, Suit::Spade)
 }
