@@ -1,6 +1,4 @@
-use rand::Rng;
-
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Suit {
     Heart,
     Diamond,
@@ -8,7 +6,7 @@ pub enum Suit {
     Club,
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Rank {
     Ace,
     King,
@@ -19,13 +17,8 @@ pub enum Rank {
 
 impl Suit {
     pub fn random() -> Suit {
-        let mut random = rand::thread_rng();
-        match random.gen_range(1..=4) {
-            1 => Suit::Heart,
-            2 => Suit::Diamond,
-            3 => Suit::Spade,
-            _ => Suit::Club,
-        }
+        let random = Self::generate_random_number(1, 4);
+        Self::translate(random)
     }
 
     pub fn translate(value: u8) -> Suit {
@@ -33,22 +26,24 @@ impl Suit {
             1 => Suit::Heart,
             2 => Suit::Diamond,
             3 => Suit::Spade,
-            4 => Suit::Club,
-            _ => panic!("Invalid suit value!"),
+            _ => Suit::Club,
         }
+    }
+
+    fn generate_random_number(min: u8, max: u8) -> u8 {
+        let now = std::time::SystemTime::now();
+        let since_the_epoch = now
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .subsec_nanos() as u8;
+        (since_the_epoch % (max - min + 1)) + min
     }
 }
 
 impl Rank {
     pub fn random() -> Rank {
-        let mut random = rand::thread_rng();
-        match random.gen_range(1..=13) {
-            1 => Rank::Ace,
-            11 => Rank::Jack,
-            12 => Rank::Queen,
-            13 => Rank::King,
-            value => Rank::Number(value),
-        }
+        let random = Self::generate_random_number(1, 13);
+        Self::translate(random)
     }
 
     pub fn translate(value: u8) -> Rank {
@@ -58,20 +53,26 @@ impl Rank {
             12 => Rank::Queen,
             13 => Rank::King,
             2..=10 => Rank::Number(value),
-            _ => panic!("Invalid rank value!"),
+            _ => panic!("Invalid value for rank"),
         }
+    }
+
+    fn generate_random_number(min: u8, max: u8) -> u8 {
+        let now = std::time::SystemTime::now();
+        let since_the_epoch = now
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .subsec_nanos() as u8;
+        (since_the_epoch % (max - min + 1)) + min
     }
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Card {
     pub suit: Suit,
     pub rank: Rank,
 }
 
 pub fn winner_card(card: Card) -> bool {
-    card == Card {
-        suit: Suit::Spade,
-        rank: Rank::Ace,
-    }
+    matches!(card.rank, Rank::Ace) && matches!(card.suit, Suit::Spade)
 }
