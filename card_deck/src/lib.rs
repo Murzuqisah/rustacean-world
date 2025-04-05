@@ -19,8 +19,8 @@ pub enum Rank {
 
 impl Suit {
     pub fn random() -> Suit {
-        let mut random = rand::thread_rng();
-        match random.gen_range(1..=4) {
+        let mut random = rand::rng();
+        match random.random_range(1..=4) {
             1 => return Suit::Heart,
             2 => return Suit::Diamond,
             3 => return Suit::Spade,
@@ -41,14 +41,13 @@ impl Suit {
 
 impl Rank {
     pub fn random() -> Rank {
-        let mut random = rand::thread_rng();
+        let mut random = rand::rng();
         match random.random_range(1..=13) {
             1 => Rank::Ace,
             11 => Rank::Jack,
             12 => Rank::Queen,
             13 => Rank::King,
             n => Rank::Number(n),
-            _ => panic!("Invalid value for rank"),
         }
     }
 
