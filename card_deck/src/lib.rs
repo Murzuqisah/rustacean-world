@@ -122,4 +122,16 @@ mod tests {
             assert!(matches!(rank, Rank::Ace) || matches!(rank, Rank::King) || matches!(rank, Rank::Queen) || matches!(rank, Rank::Jack) || matches!(rank, Rank::Number(_)));
         }
     }
+
+    #[test]
+    fn test_random_card_winner_check() {
+        for _ in 0..100 {
+            let card = Card {
+                suit: Suit::random(),
+                rank: Rank::random(),
+            };
+            let winner = Card { suit: Suit::Spade, rank: Rank::Ace };
+            assert_eq!(winner_card(card.clone()), card == winner);
+        }
+    }
 }
