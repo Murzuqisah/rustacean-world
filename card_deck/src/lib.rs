@@ -1,3 +1,5 @@
+use rand::Rng;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Suit {
     Heart,
@@ -17,8 +19,13 @@ pub enum Rank {
 
 impl Suit {
     pub fn random() -> Suit {
-        let random = Self::generate_random_number(1, 4);
-        Self::translate(random)
+        let mut random = rand::thread_rng();
+        match random.gen_range(1..=4) {
+            1 => return Suit::Heart,
+            2 => return Suit::Diamond,
+            3 => return Suit::Spade,
+            _ => return Suit::Club,
+        }
     }
 
     pub fn translate(value: u8) -> Suit {
@@ -30,21 +37,19 @@ impl Suit {
             _ => panic!("Invalid value for suit"),
         }
     }
-
-    fn generate_random_number(min: u8, max: u8) -> u8 {
-        let now = std::time::SystemTime::now();
-        let since_the_epoch = now
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .subsec_nanos() as u8;
-        (since_the_epoch % (max - min + 1)) + min
-    }
 }
 
 impl Rank {
     pub fn random() -> Rank {
-        let random = Self::generate_random_number(1, 13);
-        Self::translate(random)
+        let mut random = rand::thread_rng();
+        match random.random_range(1..=13) {
+            1 => Rank::Ace,
+            11 => Rank::Jack,
+            12 => Rank::Queen,
+            13 => Rank::King,
+            n => Rank::Number(n),
+            _ => panic!("Invalid value for rank"),
+        }
     }
 
     pub fn translate(value: u8) -> Rank {
@@ -53,18 +58,9 @@ impl Rank {
             11 => Rank::Jack,
             12 => Rank::Queen,
             13 => Rank::King,
-            n if n >= 2 && n <= 10 => Rank::Number(n),
+            2..=10 => Rank::Number(value),
             _ => panic!("Invalid value for rank"),
         }
-    }
-
-    fn generate_random_number(min: u8, max: u8) -> u8 {
-        let now = std::time::SystemTime::now();
-        let since_the_epoch = now
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .subsec_nanos() as u8;
-        (since_the_epoch % (max - min + 1)) + min
     }
 }
 
