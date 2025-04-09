@@ -7,7 +7,7 @@ pub fn open_or_create<P: AsRef<Path>>(path: &P, content: &str) {
     if path.as_ref().exists() {
         return;
     }
-
+    
     let mut file = OpenOptions::new()
         .read(true)
         .write(true)
