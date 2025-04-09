@@ -1,4 +1,4 @@
-use chrono::Utc;
+use chrono::prelude::*;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct FormError {
