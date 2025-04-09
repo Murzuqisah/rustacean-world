@@ -10,7 +10,7 @@ pub fn fetch_data(server: Result<&str, &str>, security_level: Security) -> Strin
     match security_level {
         Security::Unknown => match server {
             Ok(url) => url.to_string(),
-            Err(_) => panic!(),
+            Err(msg) => panic!("called `Result::unwrap()` on an `Err` value: \"{}\"", msg),
         },
         Security::Message => match server {
             Ok(url) => url.to_string(),
@@ -25,7 +25,7 @@ pub fn fetch_data(server: Result<&str, &str>, security_level: Security) -> Strin
             Err(msg) => format!("Not found: {}", msg),
         },
         Security::UnexpectedUrl => match server {
-            Ok(_) => panic!("Unexpected URL"),
+            Ok(url) => panic!("{}", url),
             Err(msg) => msg.to_string(),
         },
     }
