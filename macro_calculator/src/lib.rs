@@ -16,8 +16,11 @@ pub fn calculate_macros(foods: Vec<Food>) -> json::JsonValue {
     let mut proteins = 0.0;
 
     for food in foods {
-        let kcal_str = &food.calories[1];
-        let kcal: f64 = kcal_str.trim_end_matches("kcal").parse::<f64>().unwrap();
+        let kcal: f64 = food.calories[1]
+            .trim_end_matches("kcal")
+            .parse()
+            .unwrap_or(0.0);
+
 
         calories += kcal * food.nbr_of_portions;
         fats += food.fats * food.nbr_of_portions;
@@ -25,19 +28,13 @@ pub fn calculate_macros(foods: Vec<Food>) -> json::JsonValue {
         proteins += food.proteins * food.nbr_of_portions;
     }
 
-    fn round_value(val: f64) -> f64 {
-        let rounded = (val * 100.0).round() / 100.0;
-        if (rounded * 10.0).round() / 10.0 == rounded {
-            (val * 10.0).round() / 10.0
-        } else {
-            rounded
-        }
-    }
+    let round_value = |value: f64| (value * 100.0).round() / 100.0;
 
+    
     json::object! {
         "calories" => round_value(calories),
-        "fats" => round_value(fats),
         "carbs" => round_value(carbs),
         "proteins" => round_value(proteins),
+        "fats" => round_value(fats),
     }
 }
