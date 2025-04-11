@@ -1,10 +1,11 @@
+use std::collections::HashSet;
+
 pub fn is_pangram(s: &str) -> bool {
-    let mut alphabet = [false; 26];
+    let mut alphabet = HashSet::new();
     for c in s.to_lowercase().chars() {
-        if c.is_alphabetic() {
-            let index = (c as u8 - b'a') as usize;
-            alphabet[index] = true;
+        if c.is_ascii_alphabetic() {
+            alphabet.insert(c);
         }
     }
-    alphabet.iter().all(|&x| x)
+    alphabet.len() == 26
 }
