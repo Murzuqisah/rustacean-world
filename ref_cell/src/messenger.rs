@@ -1,41 +1,41 @@
+pub use std::rc::Rc;
+
 pub trait Logger {
     fn warning(&self, msg: &str);
     fn info(&self, msg: &str);
     fn error(&self, msg: &str);
 }
 
-pub struct Tracker<'a> {
-    logger: &'a dyn Logger,
-    value: usize,
-    max: usize,
+pub struct Tracker<'a, T: Logger>{
+    pub logger: &'a T,
+    pub value: Rc<usize>,
+    pub max: usize,
 }
 
-impl<'a> Tracker<'a> {
-    pub fn new(logger: &'a dyn Logger, max: usize) -> Self {
+impl<'a, T> Tracker<'a, T>
+where T: Logger {
+    pub fn new(logger: &'a T, max: usize) -> Tracker<'a, T>{
         Tracker {
             logger,
-            value: 0,
+            value: Rc::new(0),
             max,
         }
     }
 
-    pub fn set_value(&mut self, _track_value: &std::rc::Rc<usize>) {
-        self.value += 1;
+    pub fn set_value(&'a self, value: &'a Rc<usize>) {
+        let percentage: f64 = Rc::strong_count(value) as f64 / self.max as f64;
 
-        let percentage = (self.value * 100) / self.max;
-
-        if percentage >= 100 {
-            self.logger.error("you are over your quota!");
-        } else if percentage >= 70 {
-            self.logger.warning(&format!(
-                "you have used up over {}% of your quota! Proceeds with precaution",
-                percentage
-            ));
+        if percentage >= 1.0{
+            self.logger.error("Error: you are over your quota!");
+        }else if percentage >= 0.7 && percentage < 1.0{
+            let message = format!("Warning: you have used up over {}% of your quota! Proceeds with precaution", (percentage * 100.0) as i64);
+            self.logger.warning(&message);
         }
     }
 
-    pub fn peek(&self, _track_value: &std::rc::Rc<usize>) {
-        let percentage = (self.value * 100) / self.max;
-        self.logger.info(&format!("you are using up to {}% of your quota", percentage));
+    pub fn peek(&self, track_value: &'a Rc<usize>) {
+        let percentage: f64 = Rc::strong_count(track_value) as f64 / self.max as f64;
+        let message = format!("Info: you are using up to {}% of your quota", (percentage * 100.0) as i64);
+        self.logger.info(&message);
     }
 }
